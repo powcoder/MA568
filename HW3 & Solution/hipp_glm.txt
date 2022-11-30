@@ -1,0 +1,39 @@
+https://powcoder.com
+代写代考加微信 powcoder
+Assignment Project Exam Help
+Add WeChat powcoder
+https://powcoder.com
+代写代考加微信 powcoder
+Assignment Project Exam Help
+Add WeChat powcoder
+# Script hipp_glm.m
+# R shell to fit a GLM model of the relation between
+# spiking and the rat's position, history, and network effects,
+# and visualize the spatial component of this model.
+#
+# The code is initialized with an overly simple GLM model construction.
+# Please improve it!
+
+# load the rat trajectory and spiking data;
+data <-read.csv(“hipp_data.csv",header=T)
+
+# fit a GLM model to the x and y positions.  Adjust this line to improve
+# model fit.
+model <- glm(spikes~xN+yN,poisson,data)
+summary(model)
+
+# visualize your model
+# construct a grid of positions to plot the model against...
+x_new <- seq(-1,1,.1)
+y_new <- seq(-1,1,.1)
+
+# compute lambda for each point on this grid using the GLM model
+lambda <- function(x,y) { exp(model$coefficients[1]+model$coefficients[2]*x+model$coefficients[3]*y) }
+z<- outer(x_new,y_new,lambda)
+
+# plot lambda as a function position over this grid
+persp(x_new, y_new, z, theta = 30, phi = 30, expand = 0.5, col = "lightblue") -> res
+phi <- seq(0, 2*pi, len = 201)
+xr <- cos(phi)
+yr <- sin(phi)
+lines(trans3d(xr,yr,lambda(xr,yr),res), col = "pink", lwd = 2)
